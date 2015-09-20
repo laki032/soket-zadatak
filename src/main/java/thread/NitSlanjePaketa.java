@@ -36,8 +36,6 @@ public class NitSlanjePaketa extends Thread {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream("file.txt"));
             listaPaketa = (List<Paket>) ois.readObject();
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Ucitana lista, broj preostalih paketa: " + listaPaketa.size());
-            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
             ois.close();
             while (true) {
                 if (listaPaketa.size() > 0) {
@@ -55,6 +53,8 @@ public class NitSlanjePaketa extends Thread {
                 }
             }
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslate notifikacije o isteklim paketima.");
+            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
         } catch (FileNotFoundException fnfex) {
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, "Nije postojao file");
         } catch (IOException | ClassNotFoundException ex) {
