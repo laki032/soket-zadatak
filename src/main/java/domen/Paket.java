@@ -33,10 +33,10 @@ public class Paket implements Serializable {
         vremeZaSlanje = new Date(new Date().getTime() + delay * 1000);
 
         System.out.println("Primljen paket");
-        System.out.println("\tid:" + id);
-        System.out.println("\tlen:" + len);
-        System.out.println("\tid2:" + id2);
-        System.out.println("\tdelay:" + delay);
+        System.out.println("\tid = " + id);
+        System.out.println("\tlen = " + len);
+        System.out.println("\tid2 = " + id2);
+        System.out.println("\tdelay = " + delay+"s");
         System.out.println("");
     }
 
