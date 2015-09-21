@@ -7,6 +7,7 @@ package domen;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Date;
 
 /**
@@ -18,23 +19,25 @@ public class Paket implements Serializable {
     private static final long serialVersionUID = 1L;
     private byte[] podaci;
     private int id;
+    private int id2;
     private Date vremeZaSlanje;
 
     public Paket(byte[] paket) {
         podaci = paket;
         ByteBuffer bb = ByteBuffer.wrap(paket);
+        bb = bb.order(ByteOrder.LITTLE_ENDIAN);
         id = bb.getInt();
         int len = bb.getInt();
-        int id2 = bb.getInt();
+        id2 = bb.getInt();
         long delay = bb.getInt();
-        vremeZaSlanje = new Date(new Date().getTime() + delay);
-        
+        vremeZaSlanje = new Date(new Date().getTime() + delay * 1000);
+
         System.out.println("Primljen paket");
-        System.out.println("\tid:"+id);
-        System.out.println("\tlen:"+len);
-        System.out.println("\tid2:"+id2);
-        System.out.println("\tdelay:"+delay);
-        System.out.println("\tbice poslat:"+vremeZaSlanje);
+        System.out.println("\tid:" + id);
+        System.out.println("\tlen:" + len);
+        System.out.println("\tid2:" + id2);
+        System.out.println("\tdelay:" + delay);
+        System.out.println("");
     }
 
     public byte[] getPodaci() {
@@ -46,7 +49,7 @@ public class Paket implements Serializable {
     }
 
     public int getId() {
-        return id;
+        return id2;
     }
 
     public boolean isIstekao() {

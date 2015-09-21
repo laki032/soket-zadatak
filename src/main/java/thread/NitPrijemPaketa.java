@@ -35,7 +35,6 @@ public class NitPrijemPaketa extends Thread {
                 if (len == 16) {
                     Paket p = new Paket(paket);
                     nsp.dodajPaket(p);
-                    Logger.getLogger(this.getName()).log(Level.INFO, "Primljen dummy paket");
                 } else if (len == 12) {
                     Logger.getLogger(this.getName()).log(Level.INFO, "Primljen cancel paket");
                     nsp.cancel();

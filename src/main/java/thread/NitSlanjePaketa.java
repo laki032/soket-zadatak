@@ -44,7 +44,7 @@ public class NitSlanjePaketa extends Thread {
                 if (p.isIstekao()) {
                     try {
                         dosSoket.write(p.getPodaci());
-                        Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslat paket [id={0}].", p.getId());
+                        Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslat dummy paket [id={0}].", p.getId());
                     } catch (IOException ex) {
                         Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, ex.getMessage());
                     }
@@ -88,7 +88,7 @@ public class NitSlanjePaketa extends Thread {
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
     }
-    
+
     //metoda ucitava listu prethodnih paketa i salje notifikacije koliko je paketa isteklo
     public void posaljiPaketeOdProslogPuta() {
         try {
@@ -112,8 +112,10 @@ public class NitSlanjePaketa extends Thread {
                 }
             }
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslate notifikacije o isteklim paketima.");
-            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
+            if (listaPaketa.size() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
+                Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
+            }
         } catch (FileNotFoundException fnfex) {
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, "Nije postojao file");
         } catch (IOException | ClassNotFoundException ex) {
