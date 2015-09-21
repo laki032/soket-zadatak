@@ -31,17 +31,17 @@ public class NitPrijemPaketa extends Thread {
             while (true) {
                 byte[] paket = new byte[16];
                 int len = dis.read(paket);
-
+                
                 if (len == 16) {
                     Paket p = new Paket(paket);
                     nsp.dodajPaket(p);
                     Logger.getLogger(this.getName()).log(Level.INFO, "Primljen dummy paket");
                 } else if (len == 12) {
-                    nsp.cancel();
                     Logger.getLogger(this.getName()).log(Level.INFO, "Primljen cancel paket");
+                    nsp.cancel();
                     break;
                 } else {
-                    Logger.getLogger(this.getName()).log(Level.WARNING, "Nesto ne valja");
+                    Logger.getLogger(this.getName()).log(Level.WARNING, "Primljen paket koji nije duzine 12 ili 16 b.");
                     break;
                 }
             }

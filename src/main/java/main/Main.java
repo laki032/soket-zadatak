@@ -31,6 +31,7 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.INFO, "Pokrenute niti za slanje i prijem.");
             
             Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
                 public void run() {
                     nsp.cancel();
                     npp.interrupt();

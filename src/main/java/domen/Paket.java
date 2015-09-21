@@ -24,11 +24,19 @@ public class Paket implements Serializable {
         podaci = paket;
         ByteBuffer bb = ByteBuffer.wrap(paket);
         id = bb.getInt();
-        bb.getLong(); //preskoci 8 bajtova
+        int len = bb.getInt();
+        int id2 = bb.getInt();
         long delay = bb.getInt();
         vremeZaSlanje = new Date(new Date().getTime() + delay);
+        
+        System.out.println("Primljen paket");
+        System.out.println("\tid:"+id);
+        System.out.println("\tlen:"+len);
+        System.out.println("\tid2:"+id2);
+        System.out.println("\tdelay:"+delay);
+        System.out.println("\tbice poslat:"+vremeZaSlanje);
     }
-    
+
     public byte[] getPodaci() {
         return podaci;
     }
@@ -40,9 +48,9 @@ public class Paket implements Serializable {
     public int getId() {
         return id;
     }
-    
+
     public boolean isIstekao() {
-        return !vremeZaSlanje.after(new Date());
+        return vremeZaSlanje.before(new Date());
     }
 
 }

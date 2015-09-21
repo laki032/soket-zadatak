@@ -29,46 +29,14 @@ public class NitSlanjePaketa extends Thread {
     private List<Paket> listaPaketa;
     private DataOutputStream dosSoket;
 
-    //konstruktor pri kreiranju ucitava listu prethodnih paketa i salje notifikacije koliko je paketa isteklo
     public NitSlanjePaketa(DataOutputStream dos) {
         dosSoket = dos;
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("file.txt"));
-            listaPaketa = (List<Paket>) ois.readObject();
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Ucitana lista, broj preostalih paketa: " + listaPaketa.size());
-            ois.close();
-            while (true) {
-                if (listaPaketa.size() > 0) {
-                    Paket p = listaPaketa.get(0);
-                    if (p.isIstekao()) {
-                        //posalji notifikaciju da je istekao
-                        dosSoket.writeChars("Paket [id=" + p.getId() + "] je istekao u medjuvremenu.");
-                        Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Paket [id={0}] je istekao u medjuvremenu.", p.getId());
-                        listaPaketa.remove(0);
-                    } else {
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslate notifikacije o isteklim paketima.");
-            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
-        } catch (FileNotFoundException fnfex) {
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, "Nije postojao file");
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } finally {
-            File f = new File("file.txt");
-            if (listaPaketa == null) {
-                listaPaketa = new ArrayList<Paket>();
-            }
-        }
+        listaPaketa = new ArrayList<>();
     }
 
     @Override
     public void run() {
+        posaljiPaketeOdProslogPuta();
         //slanje paketa u odnosu na to da li je delay vreme proslo
         while (!isInterrupted()) {
             if (listaPaketa.size() > 0) {
@@ -114,10 +82,47 @@ public class NitSlanjePaketa extends Thread {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
             oos.writeObject(listaPaketa);
             oos.close();
-            Logger.getLogger("").log(Level.INFO, "Lista preostalih paketa upisana u fajl.");
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Lista preostalih paketa upisana u fajl.");
             this.interrupt();
         } catch (Exception ex) {
             Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
+    }
+    
+    //metoda ucitava listu prethodnih paketa i salje notifikacije koliko je paketa isteklo
+    public void posaljiPaketeOdProslogPuta() {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("file.txt"));
+            listaPaketa = (List<Paket>) ois.readObject();
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Ucitana lista, broj preostalih paketa: " + listaPaketa.size());
+            ois.close();
+            while (true) {
+                if (listaPaketa.size() > 0) {
+                    Paket p = listaPaketa.get(0);
+                    if (p.isIstekao()) {
+                        //posalji notifikaciju da je istekao
+                        dosSoket.writeChars("Paket [id=" + p.getId() + "] je istekao u medjuvremenu.");
+                        Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Paket [id={0}] je istekao u medjuvremenu.", p.getId());
+                        listaPaketa.remove(0);
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Poslate notifikacije o isteklim paketima.");
+            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss_dd/MM");
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.INFO, "Prvi naredni paket bice poslat u: " + sdf.format(listaPaketa.get(0).getVremeZaSlanje()));
+        } catch (FileNotFoundException fnfex) {
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, "Nije postojao file");
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(NitSlanjePaketa.class.getName()).log(Level.SEVERE, ex.getMessage());
+        } finally {
+            File f = new File("file.txt");
+            if (listaPaketa == null) {
+                listaPaketa = new ArrayList<>();
+            }
         }
     }
 
